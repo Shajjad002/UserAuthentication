@@ -1,0 +1,45 @@
+<div class="mb-4 text-success">
+    <h2>Sign up</h2>
+</div>
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="mb-3">
+        <!-- <label for="fullName" class="form-label">Full Name</label> -->
+        <input  id="fullName" class="form-control bg-body-secodnary"  placeholder="Full Name" formControlName="fullName">
+        <label class="error-feedback" *ngIf="form.get('fullName')?.touched && form.get('fullName')?.invalid"> 
+            Please enter your full name.
+        </label>
+    </div>
+    <div class="mb-3">
+        <!-- <label for="email" class="form-label">Email</label> -->
+        <input  id="email" class="form-control bg-body-secodnary"  placeholder="Email" formControlName="email">
+        <label class="error-feedback" *ngIf="form.get('email')?.touched && form.get('email')?.invalid"> 
+            Please enter your email address.
+        </label>
+    </div>
+    <div class="mb-3">
+        <!-- <label for="password" class="form-label">password</label> -->
+        <input  id="password" class="form-control bg-body-secodnary"  placeholder="Password" formControlName="password">
+        <div class="error-feedback" *ngIf="form.get('password')?.touched && form.get('password')?.invalid"> 
+            <ng-container [ngSwitch]="form.get('password')?.errors | firstKey">
+                <label *ngSwitchCase="'minlength'"> 
+                    Atleast 6 character required.
+                </label>
+                <label *ngSwitchCase="'pattern'"> 
+                    One or more special character.
+                </label>
+            </ng-container>
+            Please enter your Password .
+        </div>
+      
+
+        
+         
+    </div>
+     <div class="mb-3">
+        <!-- <label for="confirmPassword" class="form-label">Confirm Password</label> -->
+        <input  id="confirmPassword" class="form-control bg-body-secodnary"  placeholder="Confirm Password" formControlName="confirmPassword">
+    </div>
+    <div class="mt-4">
+        <button type="submit" class="btn btn-success w-100 rounded-3" >Register</button>
+    </div>
+</form>

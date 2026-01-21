@@ -1,0 +1,44 @@
+# Build results
+bin/
+obj/
+dist/
+.vs/
+.vscode/
+*.user
+*.suo
+*.sln.docstates
+
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Angular
+/.angular/
+/dist/
+/tmp/
+/out-tsc/
+
+# IDEs
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Environment
+.env
+.env.local
+*.pem
+
+# Dependencies
+package-lock.json
+yarn.lock
+
+# Runtime
+*.log
+
+# EF Core
+*.db
+*.db-shm
+*.db-wal
