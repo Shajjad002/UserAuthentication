@@ -3,6 +3,7 @@ import { Component, inject } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { FirstKeyPipe } from '../../shared/pipes/first-key.pipe';
 import { AuthService } from '../../shared/service/auth.service';
+import { Toast, ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-registration',
@@ -14,7 +15,9 @@ import { AuthService } from '../../shared/service/auth.service';
 export class RegistrationComponent {
   form: FormGroup;
   formBuilder = inject(FormBuilder);
- private service = inject(AuthService);
+  private service = inject(AuthService);
+  private toastr = inject(ToastrService);
+
 
   isSubmitted:boolean = false;
 
@@ -44,7 +47,9 @@ export class RegistrationComponent {
         if (response.success) {
           this.form.reset();
           this.isSubmitted = false;
-          console.log('User created successfully',response);
+          this.toastr.success('New user created','Registration successful!');
+        } else {
+          this.toastr.error(response.message);
         }
       }, error: err =>console.log('error',err) });
       
