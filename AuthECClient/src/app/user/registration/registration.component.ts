@@ -2,6 +2,7 @@ import { NgIf, NgSwitch, NgSwitchCase } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { FirstKeyPipe } from '../../shared/pipes/first-key.pipe';
+import { AuthService } from '../../shared/service/auth.service';
 
 @Component({
   selector: 'app-registration',
@@ -13,6 +14,7 @@ import { FirstKeyPipe } from '../../shared/pipes/first-key.pipe';
 export class RegistrationComponent {
   form: FormGroup;
   formBuilder = inject(FormBuilder);
+ private service = inject(AuthService);
 
   isSubmitted:boolean = false;
 
@@ -22,11 +24,13 @@ export class RegistrationComponent {
     return password === confirmPassword ? null : { mismatch: true };
   }
 
-  constructor() {
+  constructor(){
     this.form = this.formBuilder.group({
       fullName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required,Validators.minLength(6),Validators.pattern('^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{6,}$')]],
+      password: ['', [ Validators.required,
+            Validators.minLength(6),
+            Validators.pattern(/(?=.*[!@#$%^&*])/)]],
       confirmPassword: ['']
     },{ validators: this.passwordMatchValidator});
   }
@@ -35,11 +39,20 @@ export class RegistrationComponent {
   onSubmit() {
     if (this.form.valid) {
       this.isSubmitted = true;
-      console.log('Form Submitted', this.form.value);
+      //console.log('Form Submitted', this.form.value);
+      this.service.createUser(this.form.value).subscribe({ next: (response:any) => {
+        if (response.success) {
+          this.form.reset();
+          this.isSubmitted = false;
+          console.log('User created successfully',response);
+        }
+      }, error: err =>console.log('error',err) });
+      
     } else {
       console.log('Form is invalid');
     }
   }
+  
 
   hasDisplayError(controlName: string, errorName: string): boolean {
     const control = this.form.get(controlName);

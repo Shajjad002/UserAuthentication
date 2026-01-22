@@ -21,23 +21,24 @@
         <input  id="password" class="form-control bg-body-secodnary"  placeholder="Password" formControlName="password">
         <div class="error-feedback" *ngIf="form.get('password')?.touched && form.get('password')?.invalid"> 
             <ng-container [ngSwitch]="form.get('password')?.errors | firstKey">
-                <label *ngSwitchCase="'minlength'"> 
+                <label *ngSwitchCase="'required'"> 
+                    Please enter your Password.
+                </label>
+                  <label *ngSwitchCase="'minlength'"> 
                     Atleast 6 character required.
                 </label>
                 <label *ngSwitchCase="'pattern'"> 
                     One or more special character.
                 </label>
             </ng-container>
-            Please enter your Password .
         </div>
-      
-
-        
-         
     </div>
      <div class="mb-3">
         <!-- <label for="confirmPassword" class="form-label">Confirm Password</label> -->
         <input  id="confirmPassword" class="form-control bg-body-secodnary"  placeholder="Confirm Password" formControlName="confirmPassword">
+        <label class="error-feedback"   *ngIf="hasDisplayError('confirmPassword', 'mismatch')">
+            Password and Confirm Password do not match.
+        </label>
     </div>
     <div class="mt-4">
         <button type="submit" class="btn btn-success w-100 rounded-3" >Register</button>
