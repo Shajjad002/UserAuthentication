@@ -4,11 +4,12 @@ import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validator
 import { FirstKeyPipe } from '../../shared/pipes/first-key.pipe';
 import { AuthService } from '../../shared/service/auth.service';
 import { Toast, ToastrService } from 'ngx-toastr';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-registration',
   standalone: true,
-  imports: [ReactiveFormsModule, NgIf, NgSwitch, NgSwitchCase, FirstKeyPipe],
+  imports: [ReactiveFormsModule, NgIf, NgSwitch, NgSwitchCase, FirstKeyPipe,RouterLink],
   templateUrl: './registration.component.html',
   styles: [``]
 })
@@ -44,14 +45,34 @@ export class RegistrationComponent {
       this.isSubmitted = true;
       //console.log('Form Submitted', this.form.value);
       this.service.createUser(this.form.value).subscribe({ next: (response:any) => {
-        if (response.success) {
+        if (response.succeeded) {
           this.form.reset();
           this.isSubmitted = false;
           this.toastr.success('New user created','Registration successful!');
-        } else {
-          this.toastr.error(response.message);
+        } 
+      }, error: err => {
+          if (err.error && err.error.errors) {
+            err.error.errors.forEach((x: any) => {
+                //console.log('error', error);
+                switch (x.code) {
+                  case 'DuplicateUserName':
+                    // this.toastr.error('Password must be at least 6 characters long','Registration failed');
+                    break;
+                  case 'DuplicateEmail':
+                    this.toastr.error('Email is already taken','Registration failed');
+                    break;
+                  default:
+                    this.toastr.error(x.description,'Registration failed');
+                    console.log('error',x);
+                    break;
+                }
+              });
+          }else{
+                console.log('error',err);
+            // this.toastr.error('An unexpected error occurred','Registration failed');
+          }
         }
-      }, error: err =>console.log('error',err) });
+      });
       
     } else {
       console.log('Form is invalid');
@@ -61,7 +82,7 @@ export class RegistrationComponent {
 
   hasDisplayError(controlName: string, errorName: string): boolean {
     const control = this.form.get(controlName);
-    return control ? control.touched && control.hasError(errorName) : false;
+    return control ? control.touched || control.hasError(errorName) : false;
   }
   
 }
