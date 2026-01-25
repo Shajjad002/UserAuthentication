@@ -12,6 +12,7 @@ import { RouterLink } from '@angular/router';
 })
 export class LoginComponent {
   form: FormGroup;  // Declare the form property
+  isSubmitted:boolean = false;
 
   constructor(public formBuilder: FormBuilder) {
     // Initialize the form property
@@ -19,6 +20,18 @@ export class LoginComponent {
       email: ['', Validators.required],
       password: ['', Validators.required],
     });
+  };
+
+
+   hasDisplayError(controlName: string, errorName: string): boolean {
+    const control = this.form.get(controlName);
+    return control ? this.isSubmitted || (control.touched || control.hasError(errorName)) : false;
+  };
+  onSubmit() {
+    this.isSubmitted = true;
+    console.log(this.form.value);
   }
+
+
 }
 

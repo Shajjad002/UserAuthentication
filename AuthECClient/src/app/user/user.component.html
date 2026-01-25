@@ -1,11 +1,17 @@
 <div class="container">
   <div class="row vh-100  align-items-center">
     <div class="col-lg-4 offset-lg-4 col-md-8 offset-md-2 col-10 offset-1">
-      <div class="rounded-4 border-0 shadow-lg bg-white mb-4" style="min-height: 450px;">  
-        <div class="d-flex justify-content-start align-items-center ">
-            <div class="p-5 w-100">
-              <router-outlet/>
-            </div>
+      <div class="row rounded-4 border-0 shadow-lg bg-white mb-4" style="min-height: 450px;">  
+        <div class="col-md-5 d-none bg-success d-md-flex justify-content-center align-items-center rounded-start-4">
+          <div class="text-center text-white">
+            <img src="fingerprint-scan.png"  class="w-50 mb-3">
+            <h2 class="fw-bolder">Auth EC</h2>
+          </div>
+        </div>
+        <div class="col-md-7 d-flex justify-content-start align-items-center " >
+          <div class="p-4 w-100">
+            <router-outlet/>
+          </div>
         </div>
       </div>
     </div>

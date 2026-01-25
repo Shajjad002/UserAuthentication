@@ -4,21 +4,20 @@
         <a routerLink="/signup"  class="text-decoration-none fw-medium text-success d-inlin-block">Sign up</a>
     </p>
 </div>
-<form [formGroup]="form" >
-
+<form [formGroup]="form" (ngSubmit)="onSubmit()"> 
     <div class="mb-3">
         <!-- <label for="email" class="form-label">Email</label> -->
-        <input  id="email" class="form-control bg-body-secodnary"  placeholder="Email" formControlName="email">
-        <!-- <label class="error-feedback" *ngIf="form.get('email')?.touched && form.get('email')?.invalid"> 
+        <input  id="email" class="form-control bg-grabg-body-secodnary bg-gradient"  placeholder="Email" formControlName="email">
+        <label class="error-feedback" *ngIf="form.get('email')?.touched && form.get('email')?.errors?.['required']"> 
             Please enter your email address.
-        </label> -->
+        </label>
     </div>
     <div class="mb-3">
         <!-- <label for="email" class="form-label">Email</label> -->
-        <input  id="email" class="form-control bg-body-secodnary"  placeholder="Password" formControlName="Password">
-        <!-- <label class="error-feedback" *ngIf="form.get('email')?.touched && form.get('email')?.invalid"> 
-            Please enter your email address.
-        </label> -->
+        <input  id="email" class="form-control bg-body-secodnary bg-gradient"  placeholder="Password" formControlName="password">
+        <label class="error-feedback" *ngIf="form.get('password')?.touched && form.get('password')?.errors?.['required']"> 
+            Please enter your Password.
+        </label>
     </div>
     <div class="mt-4">
         <button type="submit" class="btn btn-success w-100 rounded-3" >Sign in</button>

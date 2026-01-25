@@ -82,7 +82,7 @@ export class RegistrationComponent {
 
   hasDisplayError(controlName: string, errorName: string): boolean {
     const control = this.form.get(controlName);
-    return control ? control.touched || control.hasError(errorName) : false;
+    return control ? this.isSubmitted || (control.touched || control.hasError(errorName)) : false;
   }
   
 }
