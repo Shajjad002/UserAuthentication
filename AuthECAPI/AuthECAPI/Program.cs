@@ -78,11 +78,22 @@ app.MapPost("/api/signup", async (UserManager<AppUser> userManager, [FromBody] U
     var result = await userManager.CreateAsync(newUser, userRegistrationModel.Password);
     if (result.Succeeded)
     {
-        return Results.Ok(result);
+        // return Results.Ok(result);
+        return Results.Ok(new
+        {
+            succeeded = true,
+            message = "User registered successfully"
+        });
     }
     else
     {
-        return Results.BadRequest(result);
+        //return Results.BadRequest(result);
+        return Results.BadRequest(new
+        {
+            succeeded = false,
+            errors = result.Errors
+        });
+
     }
    
 });
