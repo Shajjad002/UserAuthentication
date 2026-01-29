@@ -1,3 +1,4 @@
+using AuthECAPI.Extensions;
 using AuthECAPI.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -13,22 +14,14 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
-// Services from Add Identity API Endpoints with Entity Framework Stores
-builder.Services
-    .AddIdentityApiEndpoints<AppUser>()
-    .AddEntityFrameworkStores<AppDbContext>(); // Replace 'YourDbContext' with your actual DbContext class
 
-builder.Services.Configure<IdentityOptions>(options =>
-{
-    options.Password.RequireDigit = false;
-    options.Password.RequireLowercase = false;
-    options.Password.RequireUppercase = false;
-    options.User.RequireUniqueEmail = true;
-});
+builder.Services.InjectDbContext(builder.Configuration)
+                .AddIdentityHandlersAndStores()
+                .ConfigureIdentityOptions()
+                .AddIdentityAuth(builder.Configuration)
+                .AddSwaggerExplorer();
+
 
 builder.Services.AddCors(options =>
 {
@@ -39,27 +32,6 @@ builder.Services.AddCors(options =>
                   .AllowAnyHeader()
                   .AllowAnyMethod();
         });
-});
-
-builder.Services.AddDbContext<AppDbContext>(options =>
-{
-    // Configure your database provider and connection string here
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DevDB"));
-});
-
-builder.Services.AddAuthentication(x =>
-{
-    x.DefaultAuthenticateScheme =
-    x.DefaultChallengeScheme =
-    x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(y =>
-{
-    y.SaveToken = false;
-    y.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["AppSettings:JWTSecret"]!)),
-    };
 });
 
 var app = builder.Build();
