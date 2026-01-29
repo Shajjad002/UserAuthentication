@@ -119,7 +119,7 @@ app.MapPost("/api/signup", async (UserManager<AppUser> userManager, [FromBody] U
 
 });
 
-app.MapPost("/api/singin", async (UserManager<AppUser> userManager, [FromBody] LoginModel loginModel) =>
+app.MapPost("/api/signin", async (UserManager<AppUser> userManager, [FromBody] LoginModel loginModel) =>
 {
     var user = await userManager.FindByEmailAsync(loginModel.Email);
     if (user != null)
