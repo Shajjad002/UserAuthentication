@@ -1,6 +1,7 @@
 ﻿using AuthECAPI.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -12,9 +13,9 @@ namespace AuthECAPI.Controllers
     {
         public static IEndpointRouteBuilder MapIdentityUserEndpoints(this IEndpointRouteBuilder app)
         {
-            app.MapPost("/api/signup", CreateUser);
+            app.MapPost("/signup", CreateUser);
 
-            app.MapPost("/api/signin", SignIn);
+            app.MapPost("/signin", SignIn);
 
             return app;
         }
@@ -51,7 +52,7 @@ namespace AuthECAPI.Controllers
 
         }
 
-        private static async Task<IResult> SignIn(UserManager<AppUser> userManager, [FromBody] LoginModel loginModel)
+        private static async Task<IResult> SignIn(UserManager<AppUser> userManager, [FromBody] LoginModel loginModel,IOptions<AppSettings> appSetting)
         {
             var user = await userManager.FindByEmailAsync(loginModel.Email);
             if (user != null)
@@ -59,7 +60,7 @@ namespace AuthECAPI.Controllers
                 var isPasswordValid = await userManager.CheckPasswordAsync(user, loginModel.Password);
                 if (isPasswordValid)
                 {
-                    var signInKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["AppSettings:JWTSecret"]!));
+                    var signInKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(appSetting.Value.JWTSecret));
                     var tokenDescriptor = new SecurityTokenDescriptor
                     {
                         Subject = new ClaimsIdentity(new Claim[]

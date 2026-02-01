@@ -14,6 +14,12 @@ namespace AuthECAPI.Extensions
             return services;
         }
 
-        
+        public static IServiceCollection AddAppConfig(this IServiceCollection services, IConfiguration config)
+        {
+            services.Configure<AppSettings>(config.GetSection("AppSettings"));
+            return services;
+        }
+
+
     }
 }
