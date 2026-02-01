@@ -16,20 +16,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-builder.Services.InjectDbContext(builder.Configuration)
-                .AddIdentityHandlersAndStores()
-                .ConfigureIdentityOptions()
-                .AddIdentityAuth(builder.Configuration)
-                .AddSwaggerExplorer();
 
-var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-app.ConfigureSwaggerExplorer()
-    .AddIdentityAuthMiddlewares(); 
-
-#region Config. CORS
-
+// Add CORS Registration HERE (Before builder.Build)
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngular",
@@ -41,19 +30,32 @@ builder.Services.AddCors(options =>
         });
 });
 
+builder.Services.InjectDbContext(builder.Configuration)
+                .AddAppConfig(builder.Configuration)
+                .AddIdentityHandlersAndStores()
+                .ConfigureIdentityOptions()
+                .AddIdentityAuth(builder.Configuration)
+                .AddSwaggerExplorer();
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+app.ConfigureSwaggerExplorer()
+   .AddIdentityAuthMiddlewares();
+
+// UseCors stays here, after builder.Build()
 app.UseCors("AllowAngular");
 
-#endregion
 
 app.UseHttpsRedirection();
-
 app.MapControllers();
 
-app
-    .MapGroup("/api")
+app .MapGroup("/api")
     .MapIdentityApi<AppUser>(); // No need to specify user type again here
 
-app.MapIdentityUserEndpoints();
+app .MapGroup("/api")
+    .MapIdentityUserEndpoints();
+
 
 app.Run();
 
