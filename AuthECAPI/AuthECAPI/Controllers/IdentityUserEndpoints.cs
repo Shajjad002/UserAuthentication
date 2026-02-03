@@ -20,7 +20,7 @@ namespace AuthECAPI.Controllers
             return app;
         }
 
-        private static  async Task<IResult> CreateUser(UserManager<AppUser> userManager, [FromBody] UserRegistrationModel userRegistrationModel)
+        private static async Task<IResult> CreateUser(UserManager<AppUser> userManager, [FromBody] UserRegistrationModel userRegistrationModel)
         {
             AppUser newUser = new AppUser
             {
@@ -52,7 +52,7 @@ namespace AuthECAPI.Controllers
 
         }
 
-        private static async Task<IResult> SignIn(UserManager<AppUser> userManager, [FromBody] LoginModel loginModel,IOptions<AppSettings> appSetting)
+        private static async Task<IResult> SignIn(UserManager<AppUser> userManager, [FromBody] LoginModel loginModel, IOptions<AppSettings> appSetting)
         {
             var user = await userManager.FindByEmailAsync(loginModel.Email);
             if (user != null)
@@ -65,7 +65,7 @@ namespace AuthECAPI.Controllers
                     {
                         Subject = new ClaimsIdentity(new Claim[]
                         {
-                    new Claim("UserID",user.Id.ToString())
+                             new Claim("UserID",user.Id.ToString())
                         }),
                         Expires = DateTime.UtcNow.AddMinutes(15),
                         SigningCredentials = new SigningCredentials(signInKey, SecurityAlgorithms.HmacSha256Signature)

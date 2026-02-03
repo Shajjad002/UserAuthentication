@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../shared/service/auth.service';
@@ -12,7 +12,7 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './login.component.html',
   styles: ``
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   form: FormGroup;  // Declare the form property
   isSubmitted:boolean = false;
   
@@ -27,7 +27,13 @@ export class LoginComponent {
       email: ['', Validators.required],
       password: ['', Validators.required],
     });
-  };
+  }ngOnInit(): void {
+    if(this.authService.isLoggedIn()){
+      this.router.navigateByUrl('/dashboard');
+    }
+    ///throw new Error('Method not implemented.');
+  }
+;
 
 
    hasDisplayError(controlName: string, errorName: string): boolean {
@@ -40,7 +46,7 @@ export class LoginComponent {
     if(this.form.valid){
       
       this.authService.signin(this.form.value).subscribe({ next: (response:any) => {
-          localStorage.setItem('token',response.token);
+          this.authService.saveToken(response.token);
           this.router.navigateByUrl('/dashboard');
       }, error: err => {
           // Handle login error, e.g., show error message
