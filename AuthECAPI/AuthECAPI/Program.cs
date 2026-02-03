@@ -54,7 +54,8 @@ app .MapGroup("/api")
     .MapIdentityApi<AppUser>(); // No need to specify user type again here
 
 app .MapGroup("/api")
-    .MapIdentityUserEndpoints();
+    .MapIdentityUserEndpoints()
+    .MapAccountEndPoints();
 
 
 app.Run();

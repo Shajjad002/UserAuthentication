@@ -1,10 +1,10 @@
 import { NgIf, NgSwitch, NgSwitchCase } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { FirstKeyPipe } from '../../shared/pipes/first-key.pipe';
 import { AuthService } from '../../shared/service/auth.service';
 import { Toast, ToastrService } from 'ngx-toastr';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-registration',
@@ -13,12 +13,12 @@ import { RouterLink } from '@angular/router';
   templateUrl: './registration.component.html',
   styles: [``]
 })
-export class RegistrationComponent {
+export class RegistrationComponent implements OnInit {
   form: FormGroup;
   formBuilder = inject(FormBuilder);
   private service = inject(AuthService);
   private toastr = inject(ToastrService);
-
+  private router = inject(Router);
 
   isSubmitted:boolean = false;
 
@@ -37,6 +37,12 @@ export class RegistrationComponent {
             Validators.pattern(/(?=.*[!@#$%^&*])/)]],
       confirmPassword: ['']
     },{ validators: this.passwordMatchValidator});
+  }
+  ngOnInit(): void {
+    if(this.service.isLoggedIn()){
+      this.router.navigateByUrl('/dashboard');
+    }
+    ///throw new Error('Method not implemented.');
   }
 
 
