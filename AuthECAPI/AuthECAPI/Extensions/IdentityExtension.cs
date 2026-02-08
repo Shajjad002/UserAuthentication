@@ -1,5 +1,6 @@
 ﻿using AuthECAPI.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -41,6 +42,15 @@ namespace AuthECAPI.Extensions
                     ValidateIssuer = false,
                     ValidateAudience = false,
                 };
+            });
+            services.AddAuthorization(optins=>
+            {
+                optins.FallbackPolicy = new AuthorizationPolicyBuilder()
+                .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+                .RequireAuthenticatedUser()
+                .Build();
+                    //optins.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"));
+                    //optins.AddPolicy("RequireUserRole", policy => policy.RequireRole("User"));
             });
             return services;
         }
