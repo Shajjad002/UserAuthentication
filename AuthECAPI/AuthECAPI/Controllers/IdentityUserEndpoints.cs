@@ -1,4 +1,5 @@
 ﻿using AuthECAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -20,6 +21,7 @@ namespace AuthECAPI.Controllers
             return app;
         }
 
+        [AllowAnonymous]
         private static async Task<IResult> CreateUser(UserManager<AppUser> userManager, [FromBody] UserRegistrationModel userRegistrationModel)
         {
             AppUser newUser = new AppUser
@@ -52,6 +54,7 @@ namespace AuthECAPI.Controllers
 
         }
 
+        [AllowAnonymous]
         private static async Task<IResult> SignIn(UserManager<AppUser> userManager, [FromBody] LoginModel loginModel, IOptions<AppSettings> appSetting)
         {
             var user = await userManager.FindByEmailAsync(loginModel.Email);

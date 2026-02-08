@@ -46,6 +46,9 @@ app.ConfigureSwaggerExplorer()
 // UseCors stays here, after builder.Build()
 app.UseCors("AllowAngular");
 
+//app.UseAuthentication();
+//app.UseAuthorization();
+
 
 app.UseHttpsRedirection();
 app.MapControllers();
